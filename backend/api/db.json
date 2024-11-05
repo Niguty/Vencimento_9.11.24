@@ -1,0 +1,10 @@
+{
+    "Produto": [
+        {"id": 1,
+         "nome": "Pepsi",
+         "categoria": "Bebida",
+         "dataVencimento": "05/11/24",
+         "quantidade": 10,
+         "preco": 4.99}
+    ]
+}
