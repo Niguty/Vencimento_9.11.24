@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 import 'package:mobile/produto.dart';
 
 
@@ -18,6 +21,32 @@ class _AdicionarProdutoState extends State<AdicionarProduto> {
   final _quantidadeController = TextEditingController();
   final _precoController = TextEditingController();
   DateTime? _dataVencimento;
+
+  Future<void> _enviarProduto(Produto produto) async {
+    final url = Uri.parse('http://localhost:3000/Produto');
+    try {
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "id": produto.id,
+          "nome": produto.nome,
+          "categoria": produto.categoria,
+          "dataVencimento": DateFormat('dd/MM/yy').format(produto.dataVencimento),
+          "quantidade": produto.quantidade,
+          "preco": produto.preco,
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        print("Produto adicionado ao servidor com sucesso!");
+      } else {
+        print("Erro ao adicionar o produto: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Erro na requisição: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +117,7 @@ class _AdicionarProdutoState extends State<AdicionarProduto> {
                   preco: double.parse(_precoController.text),
                 );
                 widget.onProdutoAdicionado(novoProduto);
+                _enviarProduto(novoProduto);
                 Navigator.pop(context);
               },
               child: Text('Adicionar Produto'),
