@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mobile/produto.dart';
 
-
 class SearchScreen extends StatefulWidget {
   final List<Produto> produtos;
 
@@ -46,10 +45,8 @@ class _SearchScreenState extends State<SearchScreen> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
+              key: Key('categoriaField'),
               controller: _categoriaController,
-              onChanged: (value) {
-                _buscarPorCategoria();
-              },
               decoration: InputDecoration(
                 hintText: 'Buscar por Categoria',
                 prefixIcon: Icon(Icons.search),
@@ -58,6 +55,11 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               ),
             ),
+          ),
+          ElevatedButton(
+            key: Key('buscarButton'),
+            onPressed: _buscarPorCategoria,
+            child: Text('Buscar'),
           ),
           Expanded(
             child: ListView.builder(

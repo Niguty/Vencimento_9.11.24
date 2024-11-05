@@ -23,30 +23,31 @@ class _AdicionarProdutoState extends State<AdicionarProduto> {
   DateTime? _dataVencimento;
 
   Future<void> _enviarProduto(Produto produto) async {
-    final url = Uri.parse('http://localhost:3000/Produto');
-    try {
-      final response = await http.post(
-        url,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "id": produto.id,
-          "nome": produto.nome,
-          "categoria": produto.categoria,
-          "dataVencimento": DateFormat('dd/MM/yy').format(produto.dataVencimento),
-          "quantidade": produto.quantidade,
-          "preco": produto.preco,
-        }),
-      );
+  final url = Uri.parse('http://localhost:3000/Produto');
+  try {
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({
+        "id": produto.id,
+        "nome": produto.nome,
+        "categoria": produto.categoria,
+        "dataVencimento": DateFormat('dd/MM/yy').format(produto.dataVencimento),
+        "quantidade": produto.quantidade,
+        "preco": produto.preco,
+      }),
+    );
 
-      if (response.statusCode == 201) {
-        print("Produto adicionado ao servidor com sucesso!");
-      } else {
-        print("Erro ao adicionar o produto: ${response.statusCode}");
-      }
-    } catch (e) {
-      print("Erro na requisição: $e");
+    if (response.statusCode == 201) {
+      print("Produto adicionado com sucesso!");
+    } else {
+      print("Erro ao adicionar o produto: ${response.statusCode}");
     }
+  } catch (e) {
+    print("Erro na requisição: $e");
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
