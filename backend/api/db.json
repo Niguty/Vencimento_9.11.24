@@ -1,12 +1,12 @@
 {
-    "Produto": [
-        {
-            "id": 1,
-            "nome": "Pepsi",
-            "categoria": "Bebida",
-            "dataVencimento": "05/11/24",
-            "quantidade": 10,
-            "preco": 4.99
-        }
-    ]
+  "Produtos": [
+    {
+      "id": 1731068616393,
+      "nome": "Pepsi",
+      "categoria": "Bebida",
+      "dataVencimento": "09/11/2024",
+      "quantidade": 12,
+      "preco": 1.99
+    }
+  ]
 }

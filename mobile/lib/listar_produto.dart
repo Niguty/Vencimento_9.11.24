@@ -1,10 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile/produto.dart';
-
 
 class AdicionarProduto extends StatefulWidget {
   final Function(Produto) onProdutoAdicionado;
@@ -23,20 +21,15 @@ class _AdicionarProdutoState extends State<AdicionarProduto> {
   DateTime? _dataVencimento;
 
   Future<void> _enviarProduto(Produto produto) async {
-  final url = Uri.parse('http://localhost:3000/Produto');
   try {
     final response = await http.post(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({
-        "id": produto.id,
-        "nome": produto.nome,
-        "categoria": produto.categoria,
-        "dataVencimento": DateFormat('dd/MM/yy').format(produto.dataVencimento),
-        "quantidade": produto.quantidade,
-        "preco": produto.preco,
-      }),
+      Uri.parse('http://localhost:3000/Produtos'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(produto.toJson()),
     );
+
+    print("Status Code: ${response.statusCode}");
+    print("Response Body: ${response.body}");
 
     if (response.statusCode == 201) {
       print("Produto adicionado com sucesso!");

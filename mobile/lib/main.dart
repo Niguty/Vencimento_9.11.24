@@ -45,11 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     if (index == 0) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
-    } else if (index == 1) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -58,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       );
-    } else if (index == 2) {
+    } else if (index == 1) {
       Navigator.push(
         context,
         MaterialPageRoute(
