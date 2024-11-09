@@ -37,8 +37,8 @@ class _AdicionarProdutoState extends State<AdicionarProduto> {
       } else {
         print("Erro ao adicionar o produto: ${response.statusCode}");
       }
-    } catch (e) {
-      print("Erro na requisição: $e");
+    } catch (err) {
+      print("Erro na requisição: $err");
     }
   }
 
