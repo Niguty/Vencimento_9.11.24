@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:mobile/categoria.dart';
 import 'package:mobile/produto.dart';
 
 class AdicionarProduto extends StatefulWidget {
@@ -21,26 +22,25 @@ class _AdicionarProdutoState extends State<AdicionarProduto> {
   DateTime? _dataVencimento;
 
   Future<void> _enviarProduto(Produto produto) async {
-  try {
-    final response = await http.post(
-      Uri.parse('http://localhost:3000/Produtos'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(produto.toJson()),
-    );
+    try {
+      final response = await http.post(
+        Uri.parse('http://localhost:3000/Produtos'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(produto.toJson()),
+      );
 
-    print("Status Code: ${response.statusCode}");
-    print("Response Body: ${response.body}");
+      print("Status Code: ${response.statusCode}");
+      print("Response Body: ${response.body}");
 
-    if (response.statusCode == 201) {
-      print("Produto adicionado com sucesso!");
-    } else {
-      print("Erro ao adicionar o produto: ${response.statusCode}");
+      if (response.statusCode == 201) {
+        print("Produto adicionado com sucesso!");
+      } else {
+        print("Erro ao adicionar o produto: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Erro na requisição: $e");
     }
-  } catch (e) {
-    print("Erro na requisição: $e");
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +105,7 @@ class _AdicionarProdutoState extends State<AdicionarProduto> {
                 final novoProduto = Produto(
                   id: DateTime.now().millisecondsSinceEpoch,
                   nome: _nomeController.text,
-                  categoria: _categoriaController.text,
+                  categoria: Categoria(id: 1, nome: _categoriaController.text),
                   dataVencimento: _dataVencimento!,
                   quantidade: int.parse(_quantidadeController.text),
                   preco: double.parse(_precoController.text),

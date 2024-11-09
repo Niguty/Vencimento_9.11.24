@@ -1,12 +1,27 @@
 {
   "Produtos": [
     {
-      "id": 1731068616393,
-      "nome": "Pepsi",
-      "categoria": "Bebida",
-      "dataVencimento": "09/11/2024",
+      "id": 1731178463586,
+      "nome": "Coxinha",
+      "categoria": {
+        "id": 1,
+        "nome": "Salgado"
+      },
+      "dataVencimento": "10/11/2024",
       "quantidade": 12,
       "preco": 1.99
+    },
+    {
+      "id": 1731178489770,
+      "nome": "Pepsi",
+      "categoria": {
+        "id": 1,
+        "nome": "Bebida"
+      },
+      "dataVencimento": "30/11/2024",
+      "quantidade": 12,
+      "preco": 0.4
     }
-  ]
+  ],
+  "categorias": []
 }

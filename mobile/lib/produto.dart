@@ -1,9 +1,10 @@
 import 'package:intl/intl.dart';
+import 'package:mobile/categoria.dart';
 
 class Produto {
   final int id;
   final String nome;
-  final String categoria;
+  final Categoria categoria;
   final DateTime dataVencimento;
   final int quantidade;
   final double preco;
@@ -16,7 +17,7 @@ class Produto {
     required this.quantidade,
     required this.preco,
   });
-  
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -26,5 +27,16 @@ class Produto {
       'quantidade': quantidade,
       'preco': preco,
     };
+  }
+
+  factory Produto.fromJson(Map<String, dynamic> json) {
+    return Produto(
+      id: json['id'],
+      nome: json['nome'],
+      categoria: Categoria.fromJson(json['categoria']),
+      dataVencimento: DateFormat('dd/MM/yyyy').parse(json['dataVencimento']),
+      quantidade: json['quantidade'],
+      preco: json['preco'],
+    );
   }
 }

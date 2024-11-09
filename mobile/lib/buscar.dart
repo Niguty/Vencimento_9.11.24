@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mobile/categoria.dart';
 import 'package:mobile/produto.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -28,7 +29,8 @@ class _SearchScreenState extends State<SearchScreen> {
         _produtosFiltrados = widget.produtos;
       } else {
         _produtosFiltrados = widget.produtos
-            .where((produto) => produto.categoria.toLowerCase().contains(categoria))
+            .where((produto) =>
+                produto.categoria.nome.toLowerCase().contains(categoria))
             .toList();
       }
     });
@@ -68,7 +70,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 final produto = _produtosFiltrados[index];
                 return ListTile(
                   title: Text(produto.nome),
-                  subtitle: Text('Vence em: ${DateFormat('dd-MM-yy').format(produto.dataVencimento)}'),
+                  subtitle: Text(
+                      'Vence em: ${DateFormat('dd-MM-yy').format(produto.dataVencimento)}'),
                   trailing: Text('Qtd: ${produto.quantidade}'),
                 );
               },
