@@ -21,6 +21,17 @@
       "dataVencimento": "30/11/2024",
       "quantidade": 12,
       "preco": 0.4
+    },
+    {
+      "id": 1731201360723,
+      "nome": "Coxinha",
+      "categoria": {
+        "id": 1,
+        "nome": "Salgado"
+      },
+      "dataVencimento": "10/11/2024",
+      "quantidade": 12,
+      "preco": 8.99
     }
   ],
   "categorias": []

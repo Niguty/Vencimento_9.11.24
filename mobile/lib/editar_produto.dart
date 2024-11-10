@@ -2,11 +2,16 @@ import 'dart:convert';
 import 'package:mobile/produto.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class EditarProdutoScreen extends StatefulWidget {
-  final int produtoId;
+  final Produto produto;
+  final Function(Produto) onProdutoEditado;
 
-  EditarProdutoScreen({required this.produtoId});
+  EditarProdutoScreen({
+    required this.produto,
+    required this.onProdutoEditado,
+  });
 
   @override
   _EditarProdutoScreenState createState() => _EditarProdutoScreenState();
@@ -21,12 +26,29 @@ class _EditarProdutoScreenState extends State<EditarProdutoScreen> {
   @override
   void initState() {
     super.initState();
+    nomeController = TextEditingController(text: widget.produto.nome);
+    precoController =
+        TextEditingController(text: widget.produto.preco.toString());
+    quantidadeController =
+        TextEditingController(text: widget.produto.quantidade.toString());
+    dataVencimentoController = TextEditingController(
+      text: DateFormat('yyyy-MM-dd').format(widget.produto.dataVencimento),
+    );
   }
 
-  Future<void> editarProduto(int id, Produto produto) async {
+  @override
+  void dispose() {
+    nomeController.dispose();
+    precoController.dispose();
+    quantidadeController.dispose();
+    dataVencimentoController.dispose();
+    super.dispose();
+  }
+
+  Future<void> editarProduto(Produto produto, int id) async {
     try {
       final response = await http.put(
-        Uri.parse('http://localhost:3000/Produtos/$id'),
+        Uri.parse('http://localhost:3000/Produtos/${id}'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(produto.toJson()),
       );
@@ -34,7 +56,7 @@ class _EditarProdutoScreenState extends State<EditarProdutoScreen> {
       print("Status Code: ${response.statusCode}");
       print("Response Body: ${response.body}");
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         print("Produto editado com sucesso!");
       } else {
         print("Erro ao editar o produto: ${response.statusCode}");
@@ -70,7 +92,9 @@ class _EditarProdutoScreenState extends State<EditarProdutoScreen> {
             ),
             TextField(
               controller: dataVencimentoController,
-              decoration: InputDecoration(labelText: 'Data de Vencimento'),
+              decoration:
+                  InputDecoration(labelText: 'Data de Vencimento (yyyy-MM-dd)'),
+              keyboardType: TextInputType.datetime,
             ),
             SizedBox(height: 20),
             ElevatedButton(
@@ -81,12 +105,21 @@ class _EditarProdutoScreenState extends State<EditarProdutoScreen> {
                 final dataVencimento =
                     DateTime.parse(dataVencimentoController.text);
 
-                await editarProduto(
-                    widget.produtoId, nome, preco, quantidade, dataVencimento);
+                final produtoAtualizado = Produto(
+                  id: widget.produto.id,
+                  nome: nome,
+                  preco: preco,
+                  quantidade: quantidade,
+                  categoria: widget.produto.categoria,
+                  dataVencimento: dataVencimento,
+                );
+
+                await editarProduto(produtoAtualizado, widget.produto.id);
+                widget.onProdutoEditado(produtoAtualizado);
                 Navigator.pop(context);
               },
               child: Text('Salvar Alterações'),
-            ),
+            )
           ],
         ),
       ),

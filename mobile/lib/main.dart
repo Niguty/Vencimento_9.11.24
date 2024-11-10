@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:mobile/buscar.dart';
+import 'package:mobile/editar_produto.dart';
 import 'package:mobile/listar_produto.dart';
 import 'package:mobile/produto.dart';
-
-
 
 void main() {
   runApp(MyApp());
@@ -36,6 +34,21 @@ class _HomeScreenState extends State<HomeScreen> {
   void _adicionarProduto(Produto produto) {
     setState(() {
       _produtos.add(produto);
+    });
+  }
+
+  void editarProduto(Produto produto) {
+    setState(() {
+      final index = _produtos.indexWhere((p) => p.id == produto.id);
+      if (index != -1) {
+        _produtos[index] = produto;
+      }
+    });
+  }
+
+  void deletarProduto(int id) {
+    setState(() {
+      _produtos.removeWhere((produto) => produto.id == id);
     });
   }
 
@@ -78,8 +91,36 @@ class _HomeScreenState extends State<HomeScreen> {
           final produto = _produtos[index];
           return ListTile(
             title: Text(produto.nome),
-            subtitle: Text('Vence em: ${DateFormat('dd-MM-yy').format(produto.dataVencimento)}'),
-            trailing: Text('Qtd: ${produto.quantidade}'),
+            subtitle: Text(
+                'Preço: ${produto.preco} - Quantidade: ${produto.quantidade}'),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: Icon(Icons.edit, color: Colors.blue),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditarProdutoScreen(
+                          produto:
+                              produto, // Passando o objeto Produto inteiro, não o id
+                          onProdutoEditado: (Produto produtoEditado) {
+                            // Código para lidar com a edição do produto
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete, color: Colors.red),
+                  onPressed: () {
+                    deletarProduto(produto.id);
+                  },
+                ),
+              ],
+            ),
           );
         },
       ),
@@ -100,4 +141,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
