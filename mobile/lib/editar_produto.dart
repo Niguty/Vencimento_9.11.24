@@ -22,6 +22,7 @@ class _EditarProdutoScreenState extends State<EditarProdutoScreen> {
   late TextEditingController precoController;
   late TextEditingController quantidadeController;
   late TextEditingController dataVencimentoController;
+  late TextEditingController idController;
 
   @override
   void initState() {
@@ -34,6 +35,7 @@ class _EditarProdutoScreenState extends State<EditarProdutoScreen> {
     dataVencimentoController = TextEditingController(
       text: DateFormat('yyyy-MM-dd').format(widget.produto.dataVencimento),
     );
+    idController = TextEditingController(text: widget.produto.id.toString()); 
   }
 
   @override
@@ -42,29 +44,32 @@ class _EditarProdutoScreenState extends State<EditarProdutoScreen> {
     precoController.dispose();
     quantidadeController.dispose();
     dataVencimentoController.dispose();
+    idController.dispose();
     super.dispose();
   }
 
-  Future<void> editarProduto(Produto produto, int id) async {
-    try {
-      final response = await http.put(
-        Uri.parse('http://localhost:3000/Produtos/${id}'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(produto.toJson()),
-      );
+  Future<void> _editarProduto(Produto produto, int id) async {
+  print('Produto ID: $id');
 
-      print("Status Code: ${response.statusCode}");
-      print("Response Body: ${response.body}");
+  try {
+    final response = await http.put(
+  Uri.parse('http://localhost:3000/Produtos/${produto.id}'),
+  headers: {'Content-Type': 'application/json'},
+  body: jsonEncode(produto.toJson()),
+);
 
-      if (response.statusCode == 200) {
-        print("Produto editado com sucesso!");
-      } else {
-        print("Erro ao editar o produto: ${response.statusCode}");
-      }
-    } catch (err) {
-      print("Erro na requisição: $err");
+
+    if (response.statusCode == 200) {
+      print("Produto editado com sucesso!");
+    } else {
+      print("Erro ao editar o produto: ${response.statusCode}");
     }
+  } catch (err) {
+    print("Erro na requisição: $err");
   }
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +81,11 @@ class _EditarProdutoScreenState extends State<EditarProdutoScreen> {
         padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
+            TextField(
+              controller: idController,
+              decoration: InputDecoration(labelText: 'ID do Produto'),
+              keyboardType: TextInputType.number,
+            ),
             TextField(
               controller: nomeController,
               decoration: InputDecoration(labelText: 'Nome do Produto'),
@@ -99,27 +109,41 @@ class _EditarProdutoScreenState extends State<EditarProdutoScreen> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                final nome = nomeController.text;
-                final preco = double.parse(precoController.text);
-                final quantidade = int.parse(quantidadeController.text);
-                final dataVencimento =
-                    DateTime.parse(dataVencimentoController.text);
+                try {
+                  final nome = nomeController.text;
+                  final preco = double.tryParse(precoController.text) ?? 0;
+                  final quantidade = int.tryParse(quantidadeController.text) ?? 0;
+                  final dataVencimento = DateTime.tryParse(dataVencimentoController.text);
+                  final id = int.tryParse(idController.text) ?? 0;
 
-                final produtoAtualizado = Produto(
-                  id: widget.produto.id,
-                  nome: nome,
-                  preco: preco,
-                  quantidade: quantidade,
-                  categoria: widget.produto.categoria,
-                  dataVencimento: dataVencimento,
-                );
+                  if (dataVencimento == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Data de vencimento inválida.")),
+                    );
+                    return;
+                  }
 
-                await editarProduto(produtoAtualizado, widget.produto.id);
-                widget.onProdutoEditado(produtoAtualizado);
-                Navigator.pop(context);
+                  final atualizarProduto = Produto(
+                   id: widget.produto.id,  
+                   nome: nome,
+                   dataVencimento: dataVencimento,
+                   quantidade: quantidade,
+                   categoria: widget.produto.categoria,
+                   preco: preco,
+);
+
+
+                  widget.onProdutoEditado(atualizarProduto);
+                  await _editarProduto(atualizarProduto, id);
+                  Navigator.pop(context);
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Erro ao salvar as alterações.")),
+                  );
+                }
               },
               child: Text('Salvar Alterações'),
-            )
+            ),
           ],
         ),
       ),

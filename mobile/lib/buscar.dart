@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile/categoria.dart';
 import 'package:mobile/produto.dart';
 
 class SearchScreen extends StatefulWidget {

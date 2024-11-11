@@ -23,7 +23,7 @@ class Produto {
       'id': id,
       'nome': nome,
       'categoria': categoria,
-      'dataVencimento': DateFormat('dd/MM/yyyy').format(dataVencimento),
+      'dataVencimento': dataVencimento.toIso8601String(),
       'quantidade': quantidade,
       'preco': preco,
     };
@@ -40,3 +40,4 @@ class Produto {
     );
   }
 }
+

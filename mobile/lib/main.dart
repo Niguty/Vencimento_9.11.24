@@ -33,7 +33,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _adicionarProduto(Produto produto) {
     setState(() {
-      _produtos.add(produto);
+      final novoProduto = Produto(
+        id: DateTime.now().millisecondsSinceEpoch,
+        nome: produto.nome,
+        categoria: produto.categoria,
+        dataVencimento: produto.dataVencimento,
+        quantidade: produto.quantidade,
+        preco: produto.preco,
+      );
+      _produtos.add(novoProduto);
     });
   }
 
@@ -46,11 +54,13 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+
   void deletarProduto(int id) {
     setState(() {
       _produtos.removeWhere((produto) => produto.id == id);
     });
   }
+
 
   void _onItemTapped(int index) {
     setState(() {
@@ -103,10 +113,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => EditarProdutoScreen(
-                          produto:
-                              produto, // Passando o objeto Produto inteiro, não o id
+                          produto: produto,
                           onProdutoEditado: (Produto produtoEditado) {
-                            // Código para lidar com a edição do produto
+                            editarProduto(produtoEditado);
                           },
                         ),
                       ),

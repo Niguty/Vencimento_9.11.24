@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+
 class DeletarProdutoScreen extends StatelessWidget {
   final int produtoId;
 
   DeletarProdutoScreen({required this.produtoId});
 
-  Future<void> deletarProduto(int id) async {
-    final url = 'http://localhost:3000/Produtos/$id';
+  Future<void> _deletarProduto(int id) async {
 
     final response = await http.delete(
-      Uri.parse(url),
+      Uri.parse('http://localhost:3000/Produtos/$id'),
       headers: {'Content-Type': 'application/json'},
     );
 
@@ -30,10 +30,10 @@ class DeletarProdutoScreen extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () async {
-            await deletarProduto(produtoId);
+            await _deletarProduto(produtoId);
             Navigator.pop(context);
           },
-          child: Text('Confirmar Deletação'),
+          child: Text('Confirmar Exclusão'),
         ),
       ),
     );
